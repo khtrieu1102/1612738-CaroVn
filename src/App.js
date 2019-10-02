@@ -664,19 +664,20 @@ class Game extends Component {
     const { history, isDescending, winner, xIsNext, stepNumber } = this.state;
     const current = history[stepNumber];
 
-    // moves = history.map((step, move) => {
-    //   const desc = move
-    //     ? `Go to move #${move} at (${step.location.x}, ${step.location.y})`
-    //     : 'Go to game start';
-    //   return (
-    //     <li key={move}>
-    //       {/* <button className="step" onClick={() => this.jumpTo(move, current.squares)}>{desc}</button> */}
-    //       <button type="button" className="step" onClick={() => this.jumpTo(move)}>
-    //         {desc}
-    //       </button>
-    //     </li>
-    //   );
-    // });
+    moves = history.map((step, move) => {
+      const desc = move
+        ? `Go to move #${move} at (${step.location.x}, ${step.location.y})`
+        : 'Go to game start';
+      const uniqueMove = move ? ` ${step.location.x} + '_' + ${step.location.y} ` : '0';
+      return (
+        <li key={uniqueMove}>
+          {/* <button className="step" onClick={() => this.jumpTo(move, current.squares)}>{desc}</button> */}
+          <button type="button" className="step" onClick={() => this.jumpTo(move)}>
+            {desc}
+          </button>
+        </li>
+      );
+    });
 
     if (isDescending) {
       moves = moves.reverse();
