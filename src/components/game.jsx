@@ -1,8 +1,11 @@
+/* eslint-disable prefer-template */
+/* eslint-disable no-console */
 /* eslint-disable camelcase */
 import React from 'react';
 import './App.css';
 import Board1 from './board1';
 
+let winner = null;
 const Game = ({
   p_history,
   p_step,
@@ -14,7 +17,6 @@ const Game = ({
 }) => {
   const playerA = 'X';
   const playerB = 'O';
-  let winner = null;
 
   const checkRow = (i, j, squares) => {
     let tempJ;
@@ -145,8 +147,8 @@ const Game = ({
   };
 
   const checkWinner = (i, j, squares) => {
-    // console.log("i: " + i + ", j: " + j + " co cheo trai: " + this.checkLeftDiagonal(i, j, squares) + " co cheo phai: " + this.checkRightDiagonal(i,j,squares));
-    let tempWinner;
+    // console.log("i: " + i + ", j: " + j + " co cheo trai: " + checkRow(i, j, squares) + " co cheo phai: " + checkColumn(i,j,squares));
+    let tempWinner = null;
 
     if (
       checkRow(i, j, squares) >= 5 ||
@@ -155,10 +157,8 @@ const Game = ({
       checkRightDiagonal(i, j, squares) >= 5
     ) {
       tempWinner = p_xIsNext ? playerA : playerB;
-    } else {
-      tempWinner = null;
     }
-    winner = tempWinner;
+    return tempWinner;
   };
 
   const onSquareClick = (i, j) => {
@@ -170,7 +170,7 @@ const Game = ({
       return true;
     });
     // if (newSquares[i][j] || prevState.winner) return;
-    if (newSquares[i][j]) return;
+    if (newSquares[i][j] || winner) return;
     newSquares[i][j] = p_xIsNext ? playerA : playerB;
     p_clickSquare(
       history.concat([
@@ -180,16 +180,17 @@ const Game = ({
         },
       ]),
     );
-    checkWinner(i, j, newSquares);
+    winner = checkWinner(i, j, newSquares);
+    if (winner) console.log(winner);
   };
 
   // jumpTo(step, squares) {
   const jumpTo = step => {
-    const { history } = p_history;
+    const history = p_history;
     const current = history[step];
 
     p_changeStep(step);
-    if (step !== 0) checkWinner(current.location.x, current.location.y, current.squares);
+    if (step !== 0) winner = checkWinner(current.location.x, current.location.y, current.squares);
   };
 
   const sortMoveList = () => {
